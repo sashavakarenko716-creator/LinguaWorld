@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lingua World Pro — Авторизація Google</title>
+    <style>
+        :root {
+            --bg-main: #f7f9fa;
+            --panel-bg: #ffffff;
+            --text-main: #3c3c3c;
+            --text-muted: #afafaf;
+            --color-green: #58cc02;
+            --color-green-dark: #46a302;
+            --color-blue: #1cb0f6;
+            --color-blue-dark: #1899d6;
+            --color-red: #ff4b4b;
+            --color-orange: #ff9600;
+            --border-light: #e5e5e5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--panel-bg);
+            border-bottom: 2px solid var(--border-light);
+            padding: 12px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--color-blue);
+            cursor: pointer;
+        }
+
+        .top-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 12px;
+            background: #f0f2f3;
+        }
+
+        .stat-badge.xp { color: var(--color-orange); }
+        .stat-badge.hearts { color: var(--color-red); }
+
+        /* Профіль користувача */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #ccc;
+            object-fit: cover;
+        }
+
+        .btn-login {
+            background: #ffffff;
+            color: #757575;
+            border: 1px solid var(--border-light);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .btn-logout {
+            background: none;
+            border: none;
+            color: var(--color-red);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        main {
+            flex-grow: 1;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        h2 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 8px; }
+        .subtitle { text-align: center; color: var(--text-muted); margin-bottom: 35px; }
+
+        /* Сітка мов */
+        .grid-languages {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .card-lang {
+            background: var(--panel-bg);
+            border: 2px solid var(--border-light);
+            border-bottom: 5px solid var(--border-light);
+            border-radius: 16px;
+            padding: 24px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .card-lang:hover { background: #fafafa; border-color: var(--color-blue); }
+        .card-lang:active { transform: translateY(3px); border-bottom-width: 2px; }
+        .flag-ico { font-size: 48px; margin-bottom: 12px; display: block; }
+        .lang-lbl { font-weight: 800; font-size: 18px; }
+
+        /* Тренажер */
+        .workspace {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--panel-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 24px;
+            padding: 40px;
+        }
+
+        .top-lesson { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+        .progress-track { flex-grow: 1; background: var(--border-light); height: 16px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { width: 0%; height: 100%; background: var(--color-green); transition: width 0.3s; }
+        .close-lesson { font-size: 24px; cursor: pointer; color: var(--text-muted); font-weight: bold; }
+        .quest-title { font-size: 22px; font-weight: 800; margin-bottom: 25px; text-align: center; }
+
+        .options-stack { display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px; }
+        .btn-opt {
+            background: var(--panel-bg);
+            border: 2px solid var(--border-light);
+            border-bottom: 4px solid var(--border-light);
+            border-radius: 14px;
+            padding: 16px 20px;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .btn-opt.selected {
+            background: #e1f5fe;
+            border-color: #84d8ff;
+            border-bottom-color: #4fc3f7;
+            color: var(--color-blue-dark);
+        }
+
+        .footer-action { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--border-light); padding-top: 25px; }
+        .msg-box { font-weight: 800; font-size: 16px; border-radius: 12px; padding: 12px 20px; display: none; width: 65%; }
+        .msg-box.success { display: block; background: #e6fffa; color: #047857; }
+        .msg-box.fail { display: block; background: #fef2f2; color: #b91c1c; }
+
+        .btn-main { background: var(--color-green); color: #fff; border: none; border-bottom: 4px solid var(--color-green-dark); padding: 14px 32px; font-size: 16px; font-weight: 800; border-radius: 14px; cursor: pointer; text-transform: uppercase; }
+        .btn-main:disabled { background: #e5e5e5; border-bottom: 4px solid #ccc; color: #aaa; cursor: not-allowed; }
+    </style>
+
+    <!-- Підключення Firebase (офіційні скрипти Google) -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+</head>
+<body>
+
+    <header>
+        <div class="brand" onclick="goHome()">🌍 Lingua World Cloud</div>
+        <div class="top-stats">
+            <div class="stat-badge xp">🔥 <span id="val-xp">0</span> XP</div>
+            <div class="stat-badge hearts">❤️ <span id="val-hearts">5</span></div>
+            
+            <!-- Блок авторизації -->
+            <div id="auth-section">
+                <button class="btn-login" id="btn-google-login" onclick="loginWithGoogle()">
+                    <img src="https://gstatic.com" width="18" alt="G">
+                    Увійти
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ЕКРАН 1: Головна сторінка -->
+        <div id="scr-home" class="screen active">
+            <h2>Чому навчимося сьогодні?</h2>
+            <p class="subtitle">Авторизуйтесь, щоб ваш прогрес зберігався в хмарі Google!</p>
+            <div class="grid-languages" id="lang-injector"></div>
+        </div>
+
+        <!-- ЕКРАН 2: Урок -->
+        <div id="scr-quiz" class="screen">
+            <div class="workspace">
+                <div class="top-lesson">
+                    <div class="close-lesson" onclick="goHome()">✕</div>
+                    <div class="progress-track"><div class="progress-fill" id="lesson-bar"></div></div>
+                </div>
+                <div class="quest-title" id="quest-label">Завантаження...</div>
+                <div class="options-stack" id="options-injector"></div>
+                <div class="footer-action">
+                    <div id="msg-alert" class="msg-box"></div>
+                    <button id="btn-submit" class="btn-main" disabled>Перевірити</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ЕКРАН 3: Фініш -->
+        <div id="scr-total" class="screen">
+            <div class="workspace" style="text-align: center;">
+                <h2>Урок виконано! 🎉</h2>
+                <p style="margin: 20px 0; font-size: 24px; font-weight: bold; color: var(--color-orange);">+100 XP завантажено в хмару!</p>
+                <button class="btn-main" onclick="goHome()">Продовжити</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ⚠️ ЗАМІНІТЬ ЦІ ДАНІ НА ВЛАСНІ З КОНСОЛІ FIREBASE (якщо хочете свій проект)
+        // Зараз тут стоїть демонстраційний конфіг для миттєвого запуску
+        const firebaseConfig = {
+            apiKey: "AIzaSyAsChW-EXAMPLE_KEY_DO_NOT_USE_IN_PROD",
+            authDomain: "://firebaseapp.com",
+            projectId: "lingua-world-demo",
+            storageBucket: "://appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdefg12345"
+        };
+        
+        // Ініціалізація Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        const contentDatabase = {
+            en: { name: "Англійська", flag: "🇬🇧", q: "Як перекладається 'Book'?", o: ["Книга", "Ручка", "Стіл", "Авто"], a: "Книга" },
